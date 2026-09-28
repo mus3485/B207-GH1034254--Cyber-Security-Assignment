@@ -21,7 +21,7 @@ def setup_database():
     
 def load_dataset():
     print("Loading email dataset...")
-    df = pd.read_csv("phishing_texts.csv")
+    df = pd.read_csv(r"C:\Users\Hp\Desktop\phishing_texts.csv")
     print(f"Loaded {len(df)} emails successfully.")
     return df
 
