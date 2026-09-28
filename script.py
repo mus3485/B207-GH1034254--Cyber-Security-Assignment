@@ -18,8 +18,14 @@ def setup_database():
     """)
     connection.commit()
     connection.close()
-    print("Database and audit table initialized successfully.")
+    
+def load_dataset():
+    print("Loading email dataset...")
+    df = pd.read_csv("phishing_texts.csv")
+    print(f"Loaded {len(df)} emails successfully.")
+    return df
 
 if __name__ == "__main__":
-    print("Running database setup...")
     setup_database()
+    df = load_dataset()
+
