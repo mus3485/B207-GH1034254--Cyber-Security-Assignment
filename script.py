@@ -25,9 +25,6 @@ def load_dataset():
     print("Columns in CSV:", df.columns.tolist())
     print(f"Loaded {len(df)} emails successfully.")
     return df
-if __name__ == "__main__":
-    setup_database()
-    df = load_dataset()
 
 def train_brain(df):
     print("Preparing data for training...")
@@ -53,9 +50,38 @@ def train_brain(df):
     
     return counter, brain
 
+
+def classify_and_log(counter, brain):
+
+    user_email = input("\nEnter an email for testing: ")
+    new_email = [user_email]
+    
+    
+    email_vector = counter.transform(new_email)
+    
+    
+    prediction = brain.predict(email_vector)[0]
+    result_label = "Phishing" if prediction == 1 else "Safe"
+    
+    print(f"\nScanning Message: '{new_email[0]}'")
+    print(f"Prediction Result: {result_label}")
+    
+    
+    connection = sqlite3.connect("security_logs.db")
+    cursor = connection.cursor()
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    cursor.execute("""
+        INSERT INTO phishing_logs (timestamp, email_content, prediction_result)
+        VALUES (?, ?, ?)
+    """, (timestamp, new_email[0], result_label))
+    
+    connection.commit()
+    connection.close()
+    print("Prediction successfully logged to SQLite database!")
+
 if __name__ == "__main__":
     setup_database()
     df = load_dataset()
     counter, brain = train_brain(df)
-
-    
+    classify_and_log(counter, brain)
