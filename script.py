@@ -78,8 +78,7 @@ def classify_and_log(counter, brain):
     
     connection.commit()
     connection.close()
-    print("Prediction successfully logged to SQLite database!")
-
+    
 if __name__ == "__main__":
     setup_database()
     df = load_dataset()
